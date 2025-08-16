@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block "title" %}Automobiliai{% endblock %}
+
+{% block "content" %}
+<h1>Automobiliai:</h1>
+{% for car in cars %}
+<p><a href="{% url 'car' car.pk %}">{{ car.make }} {{ car.model }}</a> ({{ car.license_plate }} - {{ car.client_name }})</p>
+{% endfor %}
+{% endblock %}
