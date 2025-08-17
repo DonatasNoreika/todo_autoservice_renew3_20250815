@@ -15,7 +15,7 @@
         {% endif %}
         <div class="card-body">
             <h6 class="card-subtitle mb-2 text-muted">{{ car.license_plate }} - {{ car.vin_code }}</h6>
-            <p class="card-text"><a href="{{ car.pk }}">{{ car.make }} {{ car.model }}</a></p>
+            <p class="card-text"><a href="{% url 'car' car.pk %}">{{ car.make }} {{ car.model }}</a></p>
         </div>
     </div>
 </div>

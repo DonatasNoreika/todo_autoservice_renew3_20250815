@@ -40,6 +40,9 @@
                     </svg>
                     {{ user.get_username }}</a></li>
                 <li class="nav-item">
+                    <a class="nav-link" href="{% url 'user_orders' %}">Mano užsakymai</a>
+                </li>
+                <li class="nav-item">
                     <form method="post" action="{% url 'logout' %}">
                         {% csrf_token %}
                         <button class="nav-link" type="submit">Atsijungti</button>

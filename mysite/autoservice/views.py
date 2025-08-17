@@ -3,6 +3,7 @@ from .models import Service, Order, Car
 from django.views import generic
 from django.core.paginator import Paginator
 from django.db.models import Q
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 def index(request):
     num_visits = request.session.get('num_visits', 1)
@@ -49,10 +50,20 @@ class OrderListView(generic.ListView):
     model = Order
     template_name = "orders.html"
     context_object_name = "orders"
-    paginate_by = 1
+    paginate_by = 5
 
 
 class OrderDetailView(generic.DetailView):
     model = Order
     template_name = "order.html"
     context_object_name = "order"
+
+
+class UserOrderListView(LoginRequiredMixin, generic.ListView):
+    model = Order
+    template_name = "user_orders.html"
+    context_object_name = "orders"
+
+    def get_queryset(self):
+        return Order.objects.filter(user=self.request.user)
+

@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.urls import path, include
 from .views import index, cars, car, search
-from .views import OrderListView, OrderDetailView
+from .views import OrderListView, OrderDetailView, UserOrderListView
 
 urlpatterns = [
     path('', index, name="index"),
@@ -10,4 +10,5 @@ urlpatterns = [
     path('search/', search, name="search"),
     path('orders/', OrderListView.as_view(), name="orders"),
     path('orders/<int:pk>', OrderDetailView.as_view(), name="order"),
+    path('userorders/', UserOrderListView.as_view(), name="user_orders"),
 ]

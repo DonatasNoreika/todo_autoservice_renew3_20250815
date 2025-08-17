@@ -7,4 +7,5 @@
 <p><strong>Klientas: </strong>{{ car.client_name }}</p>
 <p><strong>Valstybinis numeris: </strong>{{ car.license_plate }}</p>
 <p><strong>VIN kodas: </strong>{{ car.vin_code }}</p>
+<p>{{ car.description | safe }}</p>
 {% endblock %}

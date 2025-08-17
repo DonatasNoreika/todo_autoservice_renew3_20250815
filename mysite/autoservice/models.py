@@ -1,5 +1,7 @@
 from django.db import models
-
+from django.contrib.auth.models import User
+from django.utils import timezone
+from tinymce.models import HTMLField
 
 # Create your models here.
 class Car(models.Model):
@@ -9,6 +11,7 @@ class Car(models.Model):
     vin_code = models.CharField(verbose_name="VIN Code", max_length=20)
     client_name = models.CharField(verbose_name="Client Name", max_length=50)
     photo = models.ImageField('Photo', upload_to='cars', null=True, blank=True)
+    description = HTMLField(verbose_name="Description", max_length=3000, default="")
 
     def __str__(self):
         return f"{self.make} {self.model} ({self.license_plate})"
@@ -33,6 +36,8 @@ class Service(models.Model):
 class Order(models.Model):
     date = models.DateTimeField(verbose_name="Date", auto_now_add=True)
     car = models.ForeignKey(to="Car", on_delete=models.SET_NULL, null=True, blank=True)
+    user = models.ForeignKey(to=User, verbose_name="User", on_delete=models.SET_NULL, null=True, blank=True)
+    deadline = models.DateTimeField(verbose_name="Deadline", null=True, blank=True)
 
     ORDER_STATUS = (
         ('p', 'Pending'),
@@ -42,6 +47,9 @@ class Order(models.Model):
     )
 
     status = models.CharField(verbose_name="Status", max_length=1, choices=ORDER_STATUS, blank=True, default="p")
+
+    def is_overdue(self):
+        return self.deadline and timezone.now() > self.deadline
 
     def total(self):
         total = 0
