@@ -1,12 +1,12 @@
 from django.shortcuts import render, reverse
-from .models import Service, Order, Car
+from .models import Service, Order, Car, CustomUser
 from django.views import generic
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.forms import UserCreationForm
+# from django.contrib.auth.forms import UserCreationForm
 from django.views.generic.edit import FormMixin
-from .forms import OrderCommentForm
+from .forms import OrderCommentForm, CustomUserChangeForm, CustomUserCreateForm
 from django.urls import reverse_lazy
 
 def index(request):
@@ -33,6 +33,17 @@ def search(request):
         "cars": car_search_results,
     }
     return render(request, template_name="search.html", context=context)
+
+
+class ProfileUpdateView(LoginRequiredMixin, generic.UpdateView):
+    model = CustomUser
+    form_class = CustomUserChangeForm
+    template_name = 'profile.html'
+    success_url = reverse_lazy('profile')
+    context_object_name = "user"
+
+    def get_object(self, queryset=None):
+        return self.request.user
 
 
 def cars(request):
@@ -93,6 +104,6 @@ class UserOrderListView(LoginRequiredMixin, generic.ListView):
         return Order.objects.filter(user=self.request.user)
 
 class SignUpView(generic.CreateView):
-    form_class = UserCreationForm
+    form_class = CustomUserCreateForm
     template_name = "signup.html"
     success_url = reverse_lazy("login")

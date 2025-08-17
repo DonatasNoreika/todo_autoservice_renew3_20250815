@@ -1,6 +1,6 @@
 from django.contrib import admin
-from .models import Car, Service, Order, OrderLine, OrderComment
-
+from .models import Car, Service, Order, OrderLine, OrderComment, CustomUser
+from django.contrib.auth.admin import UserAdmin
 
 # Register your models here.
 class OrderLineInLine(admin.TabularInline):
@@ -40,3 +40,4 @@ admin.site.register(Service, ServiceAdmin)
 admin.site.register(Order, OrderAdmin)
 admin.site.register(OrderLine, OrderLineAdmin)
 admin.site.register(OrderComment)
+admin.site.register(CustomUser, UserAdmin)

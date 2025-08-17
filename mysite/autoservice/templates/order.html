@@ -5,9 +5,13 @@
 {% block "content" %}
 <h1>Užsakymas Nr. {{ order.pk }}</h1>
 <p><strong>Data: </strong>{{ order.date }}</p>
-<p><strong>Terminas: </strong><span class="{% if order.is_overdue %}text-danger{% endif %}">{{ order.deadline }}</span></p>
+<p><strong>Terminas: </strong><span class="{% if order.is_overdue %}text-danger{% endif %}">{{ order.deadline }}</span>
+</p>
 <p><strong>Automobilis: </strong>{{ order.car }}</p>
-<p><strong>Klientas: </strong>{{ order.user }}</p>
+<p><strong>Klientas: </strong>
+    <img class="rounded-circle account-img" style="width: 30px" src="{{ order.user.photo.url }}">
+    {{ order.user }}
+</p>
 <p><strong>Būsena: </strong>{{ order.get_status_display }}</p>
 <table class="table table-hover">
     <thead>
@@ -45,7 +49,10 @@
 </form>
 {% endif %}
 {% for comment in order.comments.all %}
-<p><strong>{{ comment.author }}</strong>, <em>{{ comment.date_created }}</em></p>
+<p>
+    <img class="rounded-circle account-img" style="width: 30px" src="{{ comment.author.photo.url }}">
+    <strong>{{ comment.author }}</strong>,
+    <em>{{ comment.date_created }}</em></p>
 <p>{{ comment.content }}</p>
 <hr>
 {% empty %}
