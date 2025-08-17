@@ -1,9 +1,13 @@
-from django.shortcuts import render
+from django.shortcuts import render, reverse
 from .models import Service, Order, Car
 from django.views import generic
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.forms import UserCreationForm
+from django.views.generic.edit import FormMixin
+from .forms import OrderCommentForm
+from django.urls import reverse_lazy
 
 def index(request):
     num_visits = request.session.get('num_visits', 1)
@@ -53,10 +57,31 @@ class OrderListView(generic.ListView):
     paginate_by = 5
 
 
-class OrderDetailView(generic.DetailView):
+class OrderDetailView(FormMixin, generic.DetailView):
     model = Order
     template_name = "order.html"
     context_object_name = "order"
+    form_class = OrderCommentForm
+
+    # nurodome, kur atsidursime komentaro sėkmės atveju.
+    def get_success_url(self):
+        return reverse("order", kwargs={"pk": self.object.id})
+
+    # standartinis post metodo perrašymas, naudojant FormMixin, galite kopijuoti tiesiai į savo projektą.
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.get_form()
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    # štai čia nurodome, kad knyga bus būtent ta, po kuria komentuojame, o vartotojas bus tas, kuris yra prisijungęs.
+    def form_valid(self, form):
+        form.instance.order = self.get_object()
+        form.instance.author = self.request.user
+        form.save()
+        return super().form_valid(form)
 
 
 class UserOrderListView(LoginRequiredMixin, generic.ListView):
@@ -67,3 +92,7 @@ class UserOrderListView(LoginRequiredMixin, generic.ListView):
     def get_queryset(self):
         return Order.objects.filter(user=self.request.user)
 
+class SignUpView(generic.CreateView):
+    form_class = UserCreationForm
+    template_name = "signup.html"
+    success_url = reverse_lazy("login")
