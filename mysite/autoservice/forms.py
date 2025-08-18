@@ -1,4 +1,4 @@
-from .models import OrderComment, CustomUser
+from .models import OrderComment, CustomUser, Order
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 
@@ -19,3 +19,10 @@ class CustomUserChangeForm(forms.ModelForm):
     class Meta:
         model = CustomUser
         fields = ['first_name', 'last_name', 'email', 'photo']
+
+class OrderCreateUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Order
+        fields = ['car', 'deadline']
+        widgets = {'deadline': forms.DateTimeInput(attrs={'type': 'datetime-local'})}
+
