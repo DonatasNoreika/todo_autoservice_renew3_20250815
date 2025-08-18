@@ -175,7 +175,7 @@ class OrderLineUpdateView(LoginRequiredMixin, UserPassesTestMixin, generic.Updat
         return reverse("order", kwargs={"pk": self.get_object().order.pk})
 
     def test_func(self):
-        return Order.objects.get(pk=self.get_object().order.pk) == self.request.user
+        return Order.objects.get(pk=self.get_object().order.pk).user == self.request.user
 
 
 class OrderLineDeleteView(LoginRequiredMixin, UserPassesTestMixin, generic.DeleteView):
